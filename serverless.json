@@ -1,0 +1,56 @@
+{
+  "service": "your-service-name",
+  "provider": {
+    "name": "aws",
+    "runtime": "nodejs18.x",
+    "region": "your-aws-region"
+  },
+  "functions": {
+    "saveData": {
+      "handler": "src/handler.saveData",
+      "events": [
+        {
+          "http": {
+            "path": "saveData",
+            "method": "post",
+            "cors": true
+          }
+        }
+      ]
+    }
+  },
+  "resources": {
+    "Resources": {
+      "yourDynamoDBTable": {
+        "Type": "AWS::DynamoDB::Table",
+        "Properties": {
+          "TableName": "dynamoDBTableName",
+          "AttributeDefinitions": [
+            {
+              "AttributeName": "id",
+              "AttributeType": "S"
+            },
+            {
+              "AttributeName": "username",
+              "AttributeType": "S"
+            }
+          ],
+          "KeySchema": [
+            {
+              "AttributeName": "id",
+              "KeyType": "HASH"
+            },
+            {
+              "AttributeName": "username",
+              "KeyType": "RANGE"
+            }
+          ],
+          "ProvisionedThroughput": {
+            "ReadCapacityUnits": 5,
+            "WriteCapacityUnits": 5
+          }
+        }
+      }
+    }
+  }
+}
